@@ -30,8 +30,8 @@ public class MethodInvocationStub<T> {
     private static final String TAG = MethodInvocationStub.class.getSimpleName();
 
     private Map<String, MethodProxy> mInternalMethodProxies = new HashMap<>();
-    private T mBaseInterface;
-    private T mProxyInterface;
+    private T mBaseInterface;//记录原来的代理对象
+    private T mProxyInterface;//记录新的代理对象
     private String mIdentityName;
     private LogInvocation.Condition mInvocationLoggingCondition = LogInvocation.Condition.NEVER;
 
@@ -42,11 +42,14 @@ public class MethodInvocationStub<T> {
 
 
     public MethodInvocationStub(T baseInterface, Class<?>... proxyInterfaces) {
+        //保存原生的代理对象
         this.mBaseInterface = baseInterface;
         if (baseInterface != null) {
             if (proxyInterfaces == null) {
+                //找到代理对象的所以接口
                 proxyInterfaces = MethodParameterUtils.getAllInterface(baseInterface.getClass());
             }
+            //制作一个新的代理对象 HookInvocationHandler
             mProxyInterface = (T) Proxy.newProxyInstance(baseInterface.getClass().getClassLoader(), proxyInterfaces, new HookInvocationHandler());
         } else {
             VLog.d(TAG, "Unable to build HookDelegate: %s.", getIdentityName());
@@ -86,7 +89,7 @@ public class MethodInvocationStub<T> {
     }
 
     /**
-     * Add a method proxy.
+     * Add a method proxy.添加方法代理
      *
      * @param methodProxy proxy
      */
@@ -132,6 +135,7 @@ public class MethodInvocationStub<T> {
 
     /**
      * Get the startUniformer by its name.
+     * 根据函数名获取代理函数
      *
      * @param name name of the Hook
      * @param <H>  Type of the Hook
@@ -166,6 +170,7 @@ public class MethodInvocationStub<T> {
     private class HookInvocationHandler implements InvocationHandler {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            //这里的大概意思就是如果有注册代理函数,就用代理函数 , 没有注册就用原生代理的函数
             MethodProxy methodProxy = getMethodProxy(method.getName());
             boolean useProxy = (methodProxy != null && methodProxy.isEnable());
             boolean mightLog = (mInvocationLoggingCondition != LogInvocation.Condition.NEVER) ||

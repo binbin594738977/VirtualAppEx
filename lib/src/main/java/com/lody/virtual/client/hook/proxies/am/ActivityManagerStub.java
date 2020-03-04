@@ -41,6 +41,13 @@ import mirror.android.util.Singleton;
 public class ActivityManagerStub extends MethodInvocationProxy<MethodInvocationStub<IInterface>> {
 
     public ActivityManagerStub() {
+        /**
+         * 在ActivityManagerStub构造函数中，首先新建了一个MethodInvocationStub对象，
+         * 参数传入通过反射获取的AMN中IActivityManager的getDefault对象。
+         * 接着调用MethodInvocationStub两个参数的构造函数，
+         * 在这里重点来了，首先保存一个传入的getDefault对象，接着获取这个getDefault对应的Class对象所有的接口。
+         * 这里的一切都是为了使用Proxy.newProxyInstance()构建一个IActivityManager动态代理对象mProxyInterface。
+         */
         super(new MethodInvocationStub<>(ActivityManagerNative.getDefault.call()));
     }
 

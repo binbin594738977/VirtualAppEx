@@ -27,6 +27,11 @@ public class VApp extends MultiDexApplication {
         return gApp;
     }
 
+    /**
+     * [001]
+     * Application中在onCreate()方法里去初始化各种全局的变量数据是一种比较推荐的做法，
+     * 但是如果你想把初始化的时间点提前到极致，也可以去重写attachBaseContext()
+     */
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -35,7 +40,7 @@ public class VApp extends MultiDexApplication {
         VASettings.ENABLE_INNER_SHORTCUT = false;
         NonSdkManager.getInstance().visibleAllApi();
         try {
-            VirtualCore.get().startup(base);
+            VirtualCore.get().startup(base);//[002] 初始化操作
         } catch (Throwable e) {
             e.printStackTrace();
         }

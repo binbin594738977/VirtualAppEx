@@ -65,7 +65,7 @@ public class MethodParameterUtils {
 	}
 
 
-	public static void getAllInterfaces(Class clazz, HashSet<Class<?>> interfaceCollection) {
+	public static void  getAllInterfaces(Class clazz, HashSet<Class<?>> interfaceCollection) {
 		Class<?>[] classes = clazz.getInterfaces();
 		if (classes.length != 0) {
 			interfaceCollection.addAll(Arrays.asList(classes));

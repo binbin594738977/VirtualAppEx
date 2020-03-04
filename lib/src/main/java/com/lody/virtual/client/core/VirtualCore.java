@@ -179,7 +179,9 @@ public final class VirtualCore {
             VASettings.STUB_CP_AUTHORITY = context.getPackageName() + "." + VASettings.STUB_DEF_AUTHORITY;
             ServiceManagerNative.SERVICE_CP_AUTH = context.getPackageName() + "." + ServiceManagerNative.SERVICE_DEF_AUTH;
             this.context = context;
+            //首先反射获取当前进程的ActivityThread对象保存，
             mainThread = ActivityThread.currentActivityThread.call();
+            //接着获取所在进程的unHookPackageManager。因为后面会对该PackageManager做hook所以这里先做备份。
             unHookPackageManager = context.getPackageManager();
             hostPkgInfo = unHookPackageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_PROVIDERS);
             IPCBus.initialize(new IServerCache() {
@@ -194,8 +196,10 @@ public final class VirtualCore {
                 }
             });
             detectProcessType();
+            //获取InvocationStubManager单例引用，调用到InvocationStubManager.init()
             InvocationStubManager invocationStubManager = InvocationStubManager.getInstance();
             invocationStubManager.init();
+            //完成初始化之后调用InvocationStubManager.injectAll()执行对系统manager注入。
             invocationStubManager.injectAll();
             ContextFixer.fixContext(context);
             isStartUp = true;

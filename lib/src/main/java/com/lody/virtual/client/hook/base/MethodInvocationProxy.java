@@ -11,15 +11,15 @@ import java.lang.reflect.Modifier;
 
 /**
  * @author Lody
- *         <p>
- *         This class is responsible with:
- *         - Instantiating a {@link MethodInvocationStub.HookInvocationHandler} on {@link #getInvocationStub()} ()}
- *         - Install a bunch of {@link MethodProxy}s, either with a @{@link Inject} annotation or manually
- *         calling {@link #addMethodProxy(MethodProxy)} from {@link #onBindMethods()}
- *         - Install the hooked object on the Runtime via {@link #inject()}
- *         <p>
- *         All {@link MethodInvocationProxy}s (plus a couple of other @{@link IInjector}s are installed by
- *         {@link InvocationStubManager}
+ * <p>
+ * This class is responsible with:
+ * - Instantiating a {@link MethodInvocationStub.HookInvocationHandler} on {@link #getInvocationStub()} ()}
+ * - Install a bunch of {@link MethodProxy}s, either with a @{@link Inject} annotation or manually
+ * calling {@link #addMethodProxy(MethodProxy)} from {@link #onBindMethods()}
+ * - Install the hooked object on the Runtime via {@link #inject()}
+ * <p>
+ * All {@link MethodInvocationProxy}s (plus a couple of other @{@link IInjector}s are installed by
+ * {@link InvocationStubManager}
  * @see Inject
  */
 public abstract class MethodInvocationProxy<T extends MethodInvocationStub> implements IInjector {
@@ -27,6 +27,7 @@ public abstract class MethodInvocationProxy<T extends MethodInvocationStub> impl
     protected T mInvocationStub;
 
     public MethodInvocationProxy(T invocationStub) {
+        //保存传入MethodInvocationStub对象
         this.mInvocationStub = invocationStub;
         onBindMethods();
         afterHookApply(invocationStub);
@@ -37,20 +38,26 @@ public abstract class MethodInvocationProxy<T extends MethodInvocationStub> impl
         }
     }
 
+    /**
+     * 获取自身的class对象
+     */
     protected void onBindMethods() {
 
         if (mInvocationStub == null) {
             return;
         }
         Class<? extends MethodInvocationProxy> clazz = getClass();
+        //判断是否存在@Inject注解
         Inject inject = clazz.getAnnotation(Inject.class);
         if (inject != null) {
+            //读取其注解内部class对象构建对象后使用mInvocationStub.addMethodProxy()
             Class<?> proxiesClass = inject.value();
             Class<?>[] innerClasses = proxiesClass.getDeclaredClasses();
             for (Class<?> innerClass : innerClasses) {
                 if (!Modifier.isAbstract(innerClass.getModifiers())
                         && MethodProxy.class.isAssignableFrom(innerClass)
                         && innerClass.getAnnotation(SkipInject.class) == null) {
+
                     addMethodProxy(innerClass);
                 }
             }
@@ -58,6 +65,9 @@ public abstract class MethodInvocationProxy<T extends MethodInvocationStub> impl
         }
     }
 
+    /**
+     * 添加到MethodInvocationProxy中的一个map的Map
+     */
     private void addMethodProxy(Class<?> hookType) {
         try {
             Constructor<?> constructor = hookType.getDeclaredConstructors()[0];
@@ -76,6 +86,9 @@ public abstract class MethodInvocationProxy<T extends MethodInvocationStub> impl
         }
     }
 
+    /**
+     *
+     */
     public MethodProxy addMethodProxy(MethodProxy methodProxy) {
         return mInvocationStub.addMethodProxy(methodProxy);
     }
