@@ -26,9 +26,29 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks")
+            storePassword "F7BfQ43=XkJF2Dg7G/*x"
+            keyAlias "v6game"
+            keyPassword "F7BfQ43=XkJF2Dg7G/*x"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
+            debuggable true
             minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
         }
     }
 

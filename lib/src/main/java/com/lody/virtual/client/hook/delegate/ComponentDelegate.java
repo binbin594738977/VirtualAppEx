@@ -1,10 +1,9 @@
 package com.lody.virtual.client.hook.delegate;
 
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-
-import android.app.Activity;
 
 public interface ComponentDelegate {
 

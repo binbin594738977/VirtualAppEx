@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
+import com.lody.virtual.client.VClientHookManager;
 import com.lody.virtual.client.hook.delegate.ComponentDelegate;
-import com.lody.virtual.helper.utils.Reflect;
-
-import java.io.File;
 
 
 public class MyComponentDelegate implements ComponentDelegate {
@@ -44,12 +42,12 @@ public class MyComponentDelegate implements ComponentDelegate {
 
     @Override
     public void afterActivityCreate(Activity activity) {
-
+        VClientHookManager.hookActivityCreate(activity);
     }
 
     @Override
     public void afterActivityResume(Activity activity) {
-
+        VClientHookManager.hookActivityResume(activity);
     }
 
     @Override
