@@ -48,6 +48,7 @@ import io.virtualapp.home.models.EmptyAppData;
 import io.virtualapp.home.models.MultiplePackageAppData;
 import io.virtualapp.home.models.PackageAppData;
 import io.virtualapp.widgets.TwoGearsView;
+import library.Utility;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG;
 import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
@@ -135,6 +136,10 @@ public class HomeActivity extends VActivity implements HomeContract.HomeView {
         });
         menu.add("Settings").setIcon(R.drawable.ic_settings).setOnMenuItemClickListener(item -> {
             Toast.makeText(this, "The coming", Toast.LENGTH_SHORT).show();
+            return false;
+        });
+        menu.add("设置剪贴板").setIcon(R.drawable.ic_settings).setOnMenuItemClickListener(item -> {
+            Utility.copyToClipboard("069c1bmm", HomeActivity.this, true);
             return false;
         });
         mMenuView.setOnClickListener(v -> mPopupMenu.show());

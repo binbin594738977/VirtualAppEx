@@ -1,5 +1,15 @@
 LOCAL_PATH := $(call my-dir)
 MAIN_LOCAL_PATH := $(call my-dir)
+
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := jnihook
+LOCAL_SRC_FILES := my/JniHook.cpp
+LOCAL_LDLIBS := -llog
+
+include $(BUILD_SHARED_LIBRARY)
+
+
 include $(CLEAR_VARS)
 LOCAL_MODULE := va++
 

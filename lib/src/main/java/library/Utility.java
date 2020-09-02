@@ -363,7 +363,7 @@ public class Utility {
         }
     }
     public static String getDefaultFileDirectory() {
-        File file = new File(Environment.getExternalStorageDirectory() + "/wl_tblm");
+        File file = new File(Environment.getExternalStorageDirectory() + "/va_my");
         if (!file.exists()) {
             file.mkdirs();
         }
