@@ -57,10 +57,11 @@ public class JniHook {
             String name = "";
             if (object != null) {
                 String location = (String) ClassUtil.getFieldValue(object, "location");
-                int index = location.length() - 12;
+                int index = location.lastIndexOf("/") + 1;
                 name = location.substring(index);
                 WeiliuLog.log("location: " + location);
             }
+            WeiliuLog.log("name: " + name);
             String processName = Utility.getCurProcessName(VirtualCore.get().getContext());
             WeiliuLog.log("进程名: " + processName);
             byte[] getBytes = (byte[]) ClassUtil.invokeMethod(returnObj, "getBytes");

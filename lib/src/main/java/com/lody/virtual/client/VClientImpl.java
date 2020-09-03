@@ -58,6 +58,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import library.JniHook;
 import mirror.android.app.ActivityThread;
 import mirror.android.app.ActivityThreadNMR1;
 import mirror.android.app.ContextImpl;
@@ -266,6 +267,7 @@ public final class VClientImpl extends IVClient.Stub {
         Object mainThread = VirtualCore.mainThread();
         NativeEngine.startDexOverride();
         Context context = createPackageContext(data.appInfo.packageName);
+
         System.setProperty("java.io.tmpdir", context.getCacheDir().getAbsolutePath());
         File codeCacheDir;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

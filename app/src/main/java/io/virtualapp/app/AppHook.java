@@ -3,18 +3,29 @@ package io.virtualapp.app;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 
 import com.lody.virtual.client.VClientHookManager;
+import com.lody.virtual.client.VClientImpl;
+import com.lody.virtual.client.core.VirtualCore;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.Manifest;
 
 import dalvik.system.DexClassLoader;
+import library.ClassUtil;
+import library.Utility;
 import library.WeiliuLog;
 import mirror.android.app.ActivityManagerNative;
 
@@ -69,7 +80,8 @@ public class AppHook implements VClientHookManager.Callback {
     public static final String SOURCE_INJECT_JAR = "source_inject2.jar";
 
     private DexClassLoader mSourceInjectJarLoader;
-
+    private Application mApplication;
+    private ClassLoader mClassLoader;
     private Handler mHandler = new Handler();
     private Handler mWorkerHandler;
 
@@ -81,10 +93,11 @@ public class AppHook implements VClientHookManager.Callback {
         return sAppHook.mWorkerHandler;
     }
 
+
     @Override
     public void onApplicationInit(Application initialApplication) {
-
-
+        mApplication = initialApplication;
+        mClassLoader = initialApplication.getClassLoader();
         HandlerThread workerThread = new HandlerThread("Hook_Worker_Thread");
         workerThread.start();
         mWorkerHandler = new Handler(workerThread.getLooper());
@@ -104,15 +117,70 @@ public class AppHook implements VClientHookManager.Callback {
             callback.onApplicationInit(initialApplication);
         }
 
-
-//        if (!Utility.isMainProcess(initialApplication)) {   //只hook主进程
-//            return;
-//        }
-//
+        if (!Utility.isMainProcess(initialApplication)) {   //只hook主进程
+            return;
+        }
+        mHandler.postAtTime(new Runnable() {
+            @Override
+            public void run() {
+                test(initialApplication);
+            }
+        }, RESUME_TOKEN, SystemClock.uptimeMillis() + 5000);
 //        AnrMonitorClient.getInstance().start();
 //        TimingCheckTask.startCheck(initialApplication);
     }
 
+    private void test(Context context) {
+        try {
+            WeiliuLog.log("当前的包名: " + VClientImpl.get().getCurrentPackage());
+
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    VClientImpl.get().getCurrentPackage(), PackageManager.GET_ACTIVITIES);
+            for (ActivityInfo activity : packageInfo.activities) {
+                WeiliuLog.log("aClass: " + activity.name);
+                dexCacheToDexFile(activity.name);
+            }
+        } catch (Exception e) {
+            WeiliuLog.log(e);
+        }
+    }
+
+    private ArrayList<String> addList = new ArrayList<String>();
+
+    public void dexCacheToDexFile(String activityName) {
+        try {
+            Class<?> aClass = mClassLoader.loadClass(activityName);
+            Object dexCache = ClassUtil.getFieldValue(aClass, "dexCache");
+            Object dex = ClassUtil.getFieldValue(dexCache, "dex");
+            String name = "";
+            if (dexCache != null) {
+                String location = (String) ClassUtil.getFieldValue(dexCache, "location");
+                WeiliuLog.log("location: " + location);
+                if (addList.contains(location)) {
+//                    WeiliuLog.log(3, "已经添加过了" + location);
+                    return;
+                }
+                addList.add(location);
+                int index = location.lastIndexOf("/") + 1;
+                name = location.substring(index);
+            }
+            WeiliuLog.log("name: " + name);
+            String processName = Utility.getCurProcessName(VirtualCore.get().getContext());
+            WeiliuLog.log("进程名: " + processName);
+            byte[] getBytes = (byte[]) ClassUtil.invokeMethod(dex, "getBytes");
+            File file = new File(Utility.getDefaultFileDirectory() + "/dexCach0/" + processName);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            if (getBytes.length == 0) return;
+            File file1 = new File(file, name);
+            boolean b = Utility.bytesToFile(getBytes, file1);
+            WeiliuLog.log(3, b + "  文件: " + file1.getAbsolutePath());
+        } catch (Exception e) {
+            WeiliuLog.log(e);
+        }
+    }
 
     @Override
     public void onActivityCreate(Activity activity) {
@@ -134,6 +202,12 @@ public class AppHook implements VClientHookManager.Callback {
 
             }
         }, RESUME_TOKEN, SystemClock.uptimeMillis() + 5000);
+        mWorkerHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                WeiliuLog.log("activity: " + activity);
+            }
+        });
         VClientHookManager.Callback callback = getCallbackInstance(activity.getPackageName());
         if (callback != null) {
             callback.onActivityResume(activity);

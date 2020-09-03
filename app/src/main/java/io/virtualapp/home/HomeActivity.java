@@ -5,6 +5,9 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -49,6 +52,7 @@ import io.virtualapp.home.models.MultiplePackageAppData;
 import io.virtualapp.home.models.PackageAppData;
 import io.virtualapp.widgets.TwoGearsView;
 import library.Utility;
+import library.WeiliuLog;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG;
 import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
@@ -95,7 +99,24 @@ public class HomeActivity extends VActivity implements HomeContract.HomeView {
         bindViews();
         initLaunchpad();
         initMenu();
+
+//        test();
+
         new HomePresenterImpl(this).start();
+    }
+
+    private void test() {
+        try {
+            PackageManager packageManager = getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    getPackageName(), PackageManager.GET_ACTIVITIES);
+            for (ActivityInfo activity : packageInfo.activities) {
+                Class<?> aClass = Class.forName(activity.name);
+                WeiliuLog.log("aClass: " + aClass.getName());
+            }
+        } catch (Exception e) {
+            WeiliuLog.log(e);
+        }
     }
 
     private void initMenu() {

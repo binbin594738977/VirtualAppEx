@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.text.TextUtils;
 
+import com.lody.virtual.client.core.VirtualCore;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,108 +24,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WxUtil {
-    public static String bi_WT(String str) {
-        if (str == null || str.length() == 0 || VERSION.SDK_INT >= 8) {
-            return str;
-        }
-        int length = str.length();
-        char[] cArr = new char[length];
-        int i = 0;
-        int i2 = 0;
-        int i3 = -1;
-        while (i < length) {
-            int i4;
-            char charAt = str.charAt(i);
-            int i5 = i2 + 1;
-            cArr[i2] = charAt;
-            if (charAt == '&' && i3 == -1) {
-                i2 = i5;
-                i4 = i5;
-            } else if (i3 == -1 || Character.isLetter(charAt) || Character.isDigit(charAt) || charAt == '#') {
-                i2 = i5;
-                i4 = i3;
-            } else if (charAt == ';') {
-                i2 = a(cArr, i3, (i5 - i3) - 1);
-                if (i2 > 65535) {
-                    i5 = i2 - 65536;
-                    cArr[i3 - 1] = (char) ((i5 >> 10) + 55296);
-                    cArr[i3] = (char) ((i5 & 1023) + 56320);
-                    i3++;
-                } else if (i2 != 0) {
-                    cArr[i3 - 1] = (char) i2;
-                } else {
-                    i3 = i5;
-                }
-                i2 = i3;
-                i4 = -1;
-            } else {
-                i2 = i5;
-                i4 = -1;
-            }
-            i++;
-            i3 = i4;
-        }
-        return new String(cArr, 0, i2);
-    }
+public class MyUtil {
 
-    private static int a(char[] cArr, int i, int i2) {
-        int i3 = 0;
-        if (i2 > 0) {
-            if (cArr[i] != '#') {
-                String str = new String(cArr, i, i2);
-            } else if (i2 <= 1 || !(cArr[i + 1] == 'x' || cArr[i + 1] == 'X')) {
-                try {
-                    i3 = Integer.parseInt(new String(cArr, i + 1, i2 - 1), 10);
-                } catch (NumberFormatException e) {
-                }
-            } else {
-                try {
-                    i3 = Integer.parseInt(new String(cArr, i + 2, i2 - 2), 16);
-                } catch (NumberFormatException e2) {
-                }
-            }
-        }
-        return i3;
-    }
 
-    public static int bd_iA(String str) {
-        if (str == null) {
-            return -1;
-        } else if (str.length() <= 0) {
-            return -1;
-        } else if (str.startsWith("~SEMI_XML~")) {
-            return -1;
-        } else {
-            int indexOf = str.indexOf(58);
-            if (indexOf == -1 || !str.substring(0, indexOf).contains("<")) {
-                return indexOf;
-            }
-            return -1;
-        }
-    }
 
-    public static boolean s_fq(String str) {
-        if (str == null || str.length() <= 0) {
-            return false;
-        }
-        return str.endsWith("@chatroom");
-    }
 
-    private static File bR(Context context, String str) {
-        File dir = context.getDir(str, 0);
-        File file = new File(dir.getParentFile(), str);
-        dir.renameTo(file);
-        return file;
-    }
 
-    public static File hV(Context context) {
-        return bR(context, "tinker");
-    }
-
-    public static File acT(String str) {
-        return new File(str + "/patch.info");
-    }
 
     public static String bi_c(List<String> list, String str) {
         if (list == null) {
@@ -166,60 +72,8 @@ public class WxUtil {
         return arrayList;
     }
 
-    public static boolean n(Uri uri) {
-        if (uri == null) {
-            return false;
-        }
-        if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return Xg(uri.getPath());
-        }
-        return true;
-    }
 
-    public static boolean Xg(String str) {
-        if (oW(str)) {
-            return false;
-        }
-        try {
-            String canonicalPath = new File(str).getCanonicalPath();
-            if (canonicalPath.contains("/com.tencent.mm/cache/")) {
-                return true;
-            }
-            if (canonicalPath.contains("/com.tencent.mm/")) {
-                return false;
-            }
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
 
-    public static boolean oW(String str) {
-        if (str == null || str.length() <= 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 上报
-     */
-    public static void com_tencent_mm_plugin_report_service_h_mEJ_h(ClassLoader classLoader, int i, Object... objArr) throws Exception {
-        Object mEJ = ClassUtil.getStaticFieldValue(classLoader.loadClass("com.tencent.mm.plugin.report.service.h"), "mEJ");
-        ClassUtil.invokeMethod(mEJ, "h"
-                , new Class[]{int.class, Object[].class}
-                , new Object[]{i, objArr});
-    }
-
-    /**
-     * 上报
-     */
-    public static void com_tencent_mm_plugin_report_service_h_mEJ_k(ClassLoader classLoader, int i, String str) throws Exception {
-        Object mEJ = ClassUtil.getStaticFieldValue(classLoader.loadClass("com.tencent.mm.plugin.report.service.h"), "mEJ");
-        ClassUtil.invokeMethod(mEJ, "k"
-                , new Class[]{int.class, String.class}
-                , new Object[]{i, str});
-    }
 
     public static String getJSONString(JSONObject object, String str) throws Exception {
         if (object.has(str)) {
@@ -447,6 +301,8 @@ public class WxUtil {
         };
         objectObjectObjectAsyncTask.execute(url);
     }
+
+
 
 
     public interface RequestImageCallback {
