@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dalvik.system.DexClassLoader;
+import io.virtualapp.app.yixin.YiXinHook;
+import io.virtualapp.core.AnalysisView;
 import library.WeiliuLog;
 import mirror.android.app.ActivityManagerNative;
 
@@ -27,6 +29,7 @@ public class AppHook implements VClientHookManager.Callback {
         HashMap<String, Class<? extends VClientHookManager.Callback>> map = new HashMap<>();
         //TODO 在此添加更多Callback映射
         map.put("cn.xuexi.android", QGXXhook.class);
+        map.put("im.yixin", YiXinHook.class);
         CALLBACK_CLASS_MAP = Collections.unmodifiableMap(map);
     }
 
@@ -67,27 +70,22 @@ public class AppHook implements VClientHookManager.Callback {
     }
 
     public static final String SOURCE_INJECT_JAR = "source_inject2.jar";
+    public Handler mHandler;
+    public Handler mWorkerHandler;
+    public Application mApplication;
+    public ClassLoader mClassLoader;
 
-    private DexClassLoader mSourceInjectJarLoader;
-
-    private Handler mHandler = new Handler();
-    private Handler mWorkerHandler;
-
-    public static Handler getMainHandler() {
-        return sAppHook.mHandler;
-    }
-
-    public static Handler getWorkerHandler() {
-        return sAppHook.mWorkerHandler;
-    }
 
     @Override
     public void onApplicationInit(Application initialApplication) {
-
-
+        mHandler = new Handler();
+        mApplication = initialApplication;
+        mClassLoader = initialApplication.getClassLoader();
         HandlerThread workerThread = new HandlerThread("Hook_Worker_Thread");
         workerThread.start();
         mWorkerHandler = new Handler(workerThread.getLooper());
+
+
 //
 //        mHandler.post(() -> {
 //            ActivityThread.mInstrumentation.set(VirtualCore.mainThread(), AppInstrumentation.create());
@@ -131,7 +129,7 @@ public class AppHook implements VClientHookManager.Callback {
         mHandler.postAtTime(new Runnable() {
             @Override
             public void run() {
-
+//                AnalysisView.OnResume(activity);
             }
         }, RESUME_TOKEN, SystemClock.uptimeMillis() + 5000);
         VClientHookManager.Callback callback = getCallbackInstance(activity.getPackageName());

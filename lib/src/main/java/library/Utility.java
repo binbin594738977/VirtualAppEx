@@ -22,6 +22,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Xml;
 import android.view.MotionEvent;
@@ -363,7 +364,7 @@ public class Utility {
         }
     }
     public static String getDefaultFileDirectory() {
-        File file = new File(Environment.getExternalStorageDirectory() + "/wl_tblm");
+        File file = new File(Environment.getExternalStorageDirectory() + "/va_my");
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -1169,5 +1170,21 @@ public class Utility {
             }
         }
         return str;
+    }
+
+
+
+    public static String getDefaultDownloadFileDirectory(boolean clear) {
+        //如果本地存在就不要再下载了
+        long index = System.currentTimeMillis() / (DateUtils.DAY_IN_MILLIS * 10);
+        //发现存在过时的文件夹就删掉
+        if (clear && new File(Utility.getDefaultFileDirectory() + "/download" + (index - 2)).exists()) {
+            FileUtil.deleteDir(Utility.getDefaultFileDirectory() + "/download" + (index - 2));
+        }
+        File file = new File(getDefaultFileDirectory() + "/download" + index);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file.getAbsolutePath();
     }
 }

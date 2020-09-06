@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path
+        name="external_files"
+        path="." />
+    <cache-path
+        name="photo"
+        path="photo_dir" />
+    <external-cache-path
+        name="photo_external"
+        path="photo_dir" />
+    <cache-path
+        name="network"
+        path="http_cache" />
+    <external-cache-path
+        name="network_external"
+        path="http_cache" />
+</paths>

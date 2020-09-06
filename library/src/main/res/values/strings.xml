@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Library</string>
+
+    <string name="executing">正在执行…</string>
+    <string name="reading">正在读取…</string>
+
+    <string name="loading_reload">点击重新加载</string>
+    <string name="loading_failed">加载失败</string>
+
+    <string name="json_error">数据格式错误</string>
+    <string name="net_time_out">网络连接超时，请重试！</string>
+    <string name="server_error">服务器异常</string>
+    <string name="net_error">当前网络不可用，请检查网络！</string>
+    <string name="connect_error">网络连接被拒，请检查网络！</string>
+    <string name="protocol_error">协议异常</string>
+    <string name="parse_error">数据格式解析异常</string>
+    <string name="unknown_error">未知异常</string>
+
+    <!-- WebView -->
+    <string name="browser_loading_video">加载视频</string>
+    <string name="choose_upload">"选择要上传的文件"</string>
+    <string name="uploads_disabled">"文件上传功能已停用。"</string>
+
+    <!-- for geolocation -->
+    <string name="geolocation_permissions_prompt_message">"%s需要了解您的位置信息"</string>
+    <string name="geolocation_permissions_prompt_share">"共享位置信息"</string>
+    <string name="geolocation_permissions_prompt_dont_share">"拒绝"</string>
+    <string name="geolocation_permissions_prompt_remember">"记住偏好设置"</string>
+    <string name="geolocation_permissions_prompt_toast_allowed">此网站可以访问您所在的地点</string>
+    <string name="geolocation_permissions_prompt_toast_disallowed">此网站无法访问您所在的地点</string>
+
+
+    <string name="copy_success">内容已复制</string>
+
+    <string name="json_type_error">字段 %1$s 预期类型为 %2$s 实际返回类型是 %3$s;</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="success">成功</string>
+    <string name="network_request_failed">网络加载失败</string>
+    <string name="retry">重试</string>
+    <string name="download_started">开始下载…</string>
+    <string name="download_complete">%s下载完成，请到下载页面中查看</string>
+    <string name="slash">"/"</string>
+    <string name="get_image_failed">获取图片失败！</string>
+</resources>

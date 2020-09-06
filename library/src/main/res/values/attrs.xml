@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="ratio" format="float"/>
+
+    <declare-styleable name="RatioImageView">
+        <attr name="ratio"/>
+    </declare-styleable>
+
+    <declare-styleable name="RatioRelativeLayout">
+        <attr name="ratio"/>
+    </declare-styleable>
+
+    <declare-styleable name="Flowlayout">
+        <attr name="verticalSpace" format="dimension"/>
+        <attr name="horizontalSpace" format="dimension"/>
+        <attr name="android:gravity"/>
+        <attr name="android:singleLine"/>
+    </declare-styleable>
+
+    <declare-styleable name="MessageCountView">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="boundColor" format="color"/>
+        <attr name="boundSize" format="dimension"/>
+        <attr name="textColor" format="color"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="text" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="RoundImageView">
+        <attr name="ringRadius" format="dimension"/>
+        <attr name="ringColor" format="color"/>
+    </declare-styleable>
+
+
+    <attr name="roundRectRadius" format="dimension"/>
+    <attr name="roundRectWidth" format="dimension"/>
+    <attr name="roundRectHeight" format="dimension"/>
+
+    <declare-styleable name="RoundRectImageView">
+        <attr name="roundRectRadius"/>
+        <attr name="roundRectWidth"/>
+        <attr name="roundRectHeight"/>
+    </declare-styleable>
+
+    <declare-styleable name="RoundRectLinearLayout">
+        <attr name="roundRectRadius"/>
+        <attr name="roundRectWidth"/>
+        <attr name="roundRectHeight"/>
+    </declare-styleable>
+
+    <declare-styleable name="RoundRectRelativeLayout">
+        <attr name="roundRectRadius"/>
+        <attr name="roundRectWidth"/>
+        <attr name="roundRectHeight"/>
+    </declare-styleable>
+
+    <declare-styleable name="LineLinearLayout">
+        <attr name="lineColor" format="color"/>
+        <attr name="lineSize" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="MenuItemActionView">
+        <attr name="menuHint" format="string"/>
+        <attr name="showHint" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="HeaderScrollContentLayout">
+        <attr name="extraOffset" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="SingleLineLayout">
+        <attr name="android:gravity"/>
+        <attr name="space" format="dimension" />
+        <attr name="reserveMode">
+            <flag name="enabled" value="0x01" />
+            <flag name="autoHideIfShowCompletely" value="0x02" />
+            <flag name="hideOthers" value="0x04" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="AvgOutLinearLayout">
+        <attr name="weightSum" format="float"/>
+    </declare-styleable>
+    <declare-styleable name="TintImageView">
+        <attr name="tint" format="color" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="item_type_more" type="id" />
+    <item name="item_type_no_more" type="id" />
+
+
+    <item name="default_img_action" type="id" />
+    <item name="downloading_notification_id" type="id" />
+
+</resources>

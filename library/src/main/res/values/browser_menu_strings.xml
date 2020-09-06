@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="contextmenu_openlink">"打开"</string>
+    <string name="contextmenu_savelink">"保存链接"</string>
+    <string name="contextmenu_copy">"复制"</string>
+    <string name="contextmenu_copylink">"复制链接网址"</string>
+    <string name="contextmenu_download_image">"保存图片"</string>
+    <string name="contextmenu_view_image">"查看图片"</string>
+    <string name="contextmenu_dial_dot">"拨打…"</string>
+    <string name="contextmenu_add_contact">"添加联系人"</string>
+    <string name="contextmenu_send_mail">"发送电子邮件"</string>
+    <string name="contextmenu_map">"地图"</string>
+    <string name="contextmenu_openlink_newwindow">新窗口打开</string>
+    <string name="contextmenu_bookmark_thislink">添加到书签</string>
+    <string name="contextmenu_sharelink">分享链接</string>
+
+</resources>

@@ -17,7 +17,6 @@ public class QGXXhook extends VClientHookManager.CallbackAdapter {
         super.onActivityCreate(activity);
         if (TextUtils.equals("com.alibaba.lightapp.runtime.activity.CommonWebViewActivity", activity.getClass().getName())) {
             WeiliuLog.log("activiti");
-
         }
     }
 

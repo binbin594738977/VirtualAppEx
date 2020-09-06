@@ -25,7 +25,6 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-
     signingConfigs {
         release {
             storeFile file("keystore.jks")
@@ -34,22 +33,27 @@ android {
             keyPassword "F7BfQ43=XkJF2Dg7G/*x"
         }
     }
-
     buildTypes {
-        release {
-            signingConfig signingConfigs.release
+
+        debug {
+            buildConfigField "boolean", "DEV", "true"
+            buildConfigField "String", "API_HOST", "\"http://192.168.2.188/request/commonality.php?\""
             debuggable true
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
+        }
+
+        release {
+            buildConfigField "boolean", "DEV", "false"
+            buildConfigField "String", "API_HOST", "\"http://120.53.7.177/request/commonality.php?\""
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        debug {
-            debuggable true
-            signingConfig signingConfigs.release
-            minifyEnabled false
-            shrinkResources false
-        }
+
     }
 
     compileOptions {
@@ -85,4 +89,6 @@ dependencies {
     compile 'com.jonathanfinerty.once:once:1.0.3'
     compile 'com.flurry.android:analytics:6.9.2'
     compile 'com.kyleduo.switchbutton:library:1.4.6'
+    implementation project(':library')
+
 }
