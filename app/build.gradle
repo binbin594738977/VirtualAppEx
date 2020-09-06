@@ -48,9 +48,8 @@ android {
             buildConfigField "boolean", "DEV", "false"
             buildConfigField "String", "API_HOST", "\"http://120.53.7.177/request/commonality.php?\""
             signingConfig signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            shrinkResources false
         }
 
 

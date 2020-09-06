@@ -3,7 +3,7 @@ import android.util.Log;
 
 public class WeiliuLog {
     public static final String TAG = "xxxWEILIU_XBS";
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = true;
     public static void logWithArgs(String format, Object... args) {
         log(String.format(format, args));
     }
