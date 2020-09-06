@@ -5,6 +5,8 @@ import android.app.Application;
 import android.os.Handler;
 
 import com.lody.virtual.client.VClientHookManager;
+import com.lody.virtual.client.core.VirtualCore;
+import com.lody.virtual.os.VUserHandle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,28 +45,43 @@ public class YiXinHook extends VClientHookManager.CallbackAdapter {
                     synchronized (a_b) {
                         a_b.add(yxRemoteHandler);
                     }
-
+                    int index = VUserHandle.myUserId();
+                    key = "yixin_count_" + index;
+                    com.weiliu.library.WeiliuLog.log(3, "key: " + key);
+                    if (index == 0) {
+                        startNumber = "157732";
+                    } else {
+                        startNumber = "150732";
+                    }
+                    lastNumber = MyUtil.getGlobalNativeConfigs(key, int.class);
+                    if (lastNumber == 0) {
+                        lastNumber = 58010;
+                    }
+                    com.weiliu.library.WeiliuLog.log(3, "lastNumber: " + lastNumber);
                     satrtTask();
                 } catch (Exception e) {
                     WeiliuLog.log(e);
                 }
             }
-        }, 10000);
+        }, 15000);
     }
 
-    private List<String> searchlist = new ArrayList<>();
+    String key = "";
+    String startNumber = "";
+    long lastNumber = 0;
+
 
     private void satrtTask() {
+
         mAppHook.mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 String number = "";
-                do {
-                    long l = MyUtil.x_y_random(100000, 999999);
-                    number = "15073" + l;
-                } while (searchlist.contains(number));
+                lastNumber++;
+                number = startNumber + lastNumber;
                 searchPhoneNumber(number);
-                mAppHook.mHandler.postDelayed(this, 1000);
+                MyUtil.putGlobalNativeConfigs(key, lastNumber);
+                mAppHook.mHandler.postDelayed(this, 500);
             }
         }, 0);
     }

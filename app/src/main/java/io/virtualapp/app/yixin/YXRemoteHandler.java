@@ -27,9 +27,11 @@ public class YXRemoteHandler extends Handler {
             if (message == null) return;
             if (message.obj == null) return;
             int type = (int) ClassUtil.getFieldValue(message.obj, "b");
+            com.weiliu.library.WeiliuLog.log(3,"结果1:" + type);
             if (type == 221) {
                 Object a = (Object) ClassUtil.invokeMethod(message.obj, "a");
                 int a_a = (int) ClassUtil.getFieldValue(a, "a");
+                com.weiliu.library.WeiliuLog.log(3,"结果2:" + a_a);
                 if (a_a == 200) {
                     Object a_b = (Object) ClassUtil.getFieldValue(a, "b");
                     if (a_b == null) return;
@@ -44,7 +46,7 @@ public class YXRemoteHandler extends Handler {
     }
 
     private void report(YXContact yxContact) {
-        com.weiliu.library.WeiliuLog.log("成功数据");
+        com.weiliu.library.WeiliuLog.log(3,"成功数据");
         BaseUrlParams up = new BaseUrlParams("yixin", "searchInfo");
         up.getParams().put("address", yxContact.address);
         up.getParams().put("birthday", yxContact.birthday);
