@@ -267,7 +267,7 @@ public final class VClientImpl extends IVClient.Stub {
         Object mainThread = VirtualCore.mainThread();
         NativeEngine.startDexOverride();
         Context context = createPackageContext(data.appInfo.packageName);
-
+        JniHook.hookGetDexNative(context.getClassLoader());
         System.setProperty("java.io.tmpdir", context.getCacheDir().getAbsolutePath());
         File codeCacheDir;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -473,13 +473,13 @@ public final class VClientImpl extends IVClient.Stub {
         return boundApp;
     }
 
-    private void installContentProviders(Context app, List<ProviderInfo> providers) {
+    private void installContentProviders(Context context, List<ProviderInfo> providers) {
         long origId = Binder.clearCallingIdentity();
         Object mainThread = VirtualCore.mainThread();
         try {
-            for (ProviderInfo cpi : providers) {
+            for (ProviderInfo installProvider : providers) {
                 try {
-                    ActivityThread.installProvider(mainThread, app, cpi, null);
+                    ActivityThread.installProvider(mainThread, context, installProvider, null);
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
