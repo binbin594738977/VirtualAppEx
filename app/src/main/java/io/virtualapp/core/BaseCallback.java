@@ -20,6 +20,11 @@ import io.virtualapp.R;
 public abstract class BaseCallback<T> extends HttpCallBack<T> {
 
     @Override
+    public void previewCache(T resultData) {
+
+    }
+
+    @Override
     public void failed(@Nullable T resultData, int httpStatus, int code, @Nullable String info, @Nullable Throwable e) {
         handleFailedResult(resultData, httpStatus, code, info, e);
     }

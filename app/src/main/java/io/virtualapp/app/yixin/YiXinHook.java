@@ -2,6 +2,8 @@ package io.virtualapp.app.yixin;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 
 import com.lody.virtual.client.VClientHookManager;
@@ -22,6 +24,8 @@ public class YiXinHook extends VClientHookManager.CallbackAdapter {
     public Application mApplication;
     public ClassLoader mClassLoader;
     public AppHook mAppHook;
+    public static YiXinHook mYiXinHook;
+    public SharedPreferences sp;
 
     @Override
     public void onApplicationInit(Application initialApplication) {
@@ -32,6 +36,8 @@ public class YiXinHook extends VClientHookManager.CallbackAdapter {
         mAppHook = AppHook.getInstance();
         mApplication = mAppHook.mApplication;
         mClassLoader = mAppHook.mClassLoader;
+        mYiXinHook = this;
+        sp = mApplication.getSharedPreferences("yixin", Context.MODE_PRIVATE);
         mAppHook.mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -45,20 +51,7 @@ public class YiXinHook extends VClientHookManager.CallbackAdapter {
                     synchronized (a_b) {
                         a_b.add(yxRemoteHandler);
                     }
-                    int index = VUserHandle.myUserId();
-                    key = "yixin_count_" + index;
-                    com.weiliu.library.WeiliuLog.log(3, "key: " + key);
-                    if (index == 0) {
-                        startNumber = "157732";
-                    } else {
-                        startNumber = "150732";
-                    }
-                    lastNumber = MyUtil.getGlobalNativeConfigs(key, int.class);
-                    if (lastNumber == 0) {
-                        lastNumber = 58010;
-                    }
-                    com.weiliu.library.WeiliuLog.log(3, "lastNumber: " + lastNumber);
-                    satrtTask();
+                    yxRemoteHandler.satrtTask();
                 } catch (Exception e) {
                     WeiliuLog.log(e);
                 }
@@ -66,24 +59,8 @@ public class YiXinHook extends VClientHookManager.CallbackAdapter {
         }, 15000);
     }
 
-    String key = "";
-    String startNumber = "";
-    long lastNumber = 0;
-
-
-    private void satrtTask() {
-
-        mAppHook.mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String number = "";
-                lastNumber++;
-                number = startNumber + lastNumber;
-                searchPhoneNumber(number);
-                MyUtil.putGlobalNativeConfigs(key, lastNumber);
-                mAppHook.mHandler.postDelayed(this, 500);
-            }
-        }, 0);
+    public static YiXinHook get() {
+        return mYiXinHook;
     }
 
     public void searchPhoneNumber(String phoneNumber) {
