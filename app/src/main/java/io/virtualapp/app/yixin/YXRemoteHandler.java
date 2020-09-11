@@ -20,7 +20,9 @@ import io.virtualapp.core.BaseApplication;
 import io.virtualapp.core.BaseCallback;
 import io.virtualapp.core.BaseUrlParams;
 import library.ClassUtil;
+import library.Utility;
 import library.WeiliuLog;
+import library.WxUtil;
 
 public class YXRemoteHandler extends Handler {
     TaskStarter taskStarter = new TaskStarter(BaseApplication.app());
@@ -79,9 +81,11 @@ public class YXRemoteHandler extends Handler {
 
 
     public void satrtTask() {
-        mNumber = YiXinHook.get().sp.getLong(NUMBER, 0);
-        mMaxNumber = YiXinHook.get().sp.getLong(MAX_NUMBER, 0);
-
+        if (MyUtil.getGlobalNativeConfigs("yixin_save_number", boolean.class)) {
+            com.weiliu.library.WeiliuLog.log(3, "继续上次的号码");
+            mNumber = YiXinHook.get().sp.getLong(NUMBER, 0);
+            mMaxNumber = YiXinHook.get().sp.getLong(MAX_NUMBER, 0);
+        }
         AppHook.getInstance().mWorkerHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -89,9 +93,9 @@ public class YXRemoteHandler extends Handler {
                     try {
                         mNumber++;
                         if (mNumber == 0 || mMaxNumber == 0 || mNumber >= mMaxNumber) {
-                            com.weiliu.library.WeiliuLog.log("请求数据");
+                            com.weiliu.library.WeiliuLog.log(3, "请求数据");
                             requestNumber();
-                            Thread.sleep(2000);
+                            Thread.sleep(5000);
                             continue;
                         }
                         YiXinHook.get().searchPhoneNumber(String.valueOf(mNumber));
@@ -115,12 +119,13 @@ public class YXRemoteHandler extends Handler {
             @Override
             public void success(RequestNumberData resultData, @Nullable String info) {
                 if (resultData != null) {
-                    WeiliuLog.log(resultData.toString());
+                    WeiliuLog.log(3, "请求成功了: " + resultData.toString());
                     YiXinHook.get().sp.edit().putLong(MAX_NUMBER, resultData.maxNumber).commit();
                     YiXinHook.get().sp.edit().putLong(NUMBER, resultData.number).commit();
                     mNumber = resultData.number;
                     mMaxNumber = resultData.maxNumber;
-
+                } else {
+                    com.weiliu.library.WeiliuLog.log(3, "请求成功,没有数据");
                 }
             }
 
