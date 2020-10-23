@@ -5,6 +5,7 @@
       "sdkFolder": "/Users/fuheng/Library/Android/sdk",
       "isNativeCompilerSettingsCacheEnabled": false,
       "isBuildOnlyTargetAbiEnabled": true,
+      "ideBuildTargetAbi": "arm64-v8a,armeabi-v7a,armeabi",
       "splitsAbiFilterSet": [],
       "intermediatesFolder": "/Users/fuheng/StudioProjects/VirtualAppEx/lib/build/intermediates",
       "gradleModulePathName": ":lib",
@@ -39,8 +40,7 @@
     "gradleBuildOutputFolder": "/Users/fuheng/StudioProjects/VirtualAppEx/lib/.cxx/cxx/debug",
     "isDebuggableEnabled": true,
     "validAbiList": [
-      "ARMEABI_V7A",
-      "X86"
+      "ARMEABI_V7A"
     ],
     "buildTargetSet": []
   },

@@ -2,6 +2,7 @@ package io.virtualapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Debug;
 import android.support.multidex.MultiDexApplication;
 
 import com.flurry.android.FlurryAgent;
@@ -41,9 +42,7 @@ public class VApp extends MultiDexApplication {
         VASettings.ENABLE_IO_REDIRECT = true;
         VASettings.ENABLE_INNER_SHORTCUT = false;
         NonSdkManager.getInstance().visibleAllApi();
-
         AppHook.getInstance().start();
-
         try {
             VirtualCore.get().startup(base);//[002] 初始化操作
         } catch (Throwable e) {

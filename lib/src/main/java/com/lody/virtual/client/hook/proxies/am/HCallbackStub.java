@@ -25,7 +25,10 @@ import mirror.android.app.ActivityManagerNative;
 import mirror.android.app.ActivityThread;
 import mirror.android.app.IActivityManager;
 
+
 /**
+ * 将ActivityThread的mH这个Handle增加一个我们自己的callback,这样所以的事件都会经过我们这里,这个mH一般是处理系统事情的,所以自己处理完再交给系统处理
+ *
  * @author Lody
  * @see Handler.Callback
  */
@@ -60,7 +63,7 @@ public class HCallbackStub implements Handler.Callback, IInjector {
     private boolean mCalling = false;
 
 
-    private Handler.Callback otherCallback;
+    private Handler.Callback otherCallback;//这里系统一般是没有callback的
 
     private HCallbackStub() {
     }
@@ -69,6 +72,7 @@ public class HCallbackStub implements Handler.Callback, IInjector {
         return sCallback;
     }
 
+    //系统的原来的
     private static Handler getH() {
         return ActivityThread.mH.get(VirtualCore.mainThread());
     }
@@ -89,10 +93,12 @@ public class HCallbackStub implements Handler.Callback, IInjector {
             mCalling = true;
             try {
                 if (LAUNCH_ACTIVITY == msg.what) {
+                    //老版本启动activity走的这个
                     if (!handleLaunchActivity(msg)) {
                         return true;
                     }
-                } else if(msg.what == EXECUTE_TRANSACTION) {
+                } else if (msg.what == EXECUTE_TRANSACTION) {
+                    //新版本启动activity走的这个,处理完之后,会将intent ActivityInfo等信息修改成将要打开的activity信息
                     if (!handleExecuteTransaction(msg)) {
                         return true;
                     }
@@ -116,7 +122,7 @@ public class HCallbackStub implements Handler.Callback, IInjector {
                 mCalling = false;
             }
         }
-        return false;
+        return false;//返回false是继续让系统的handleMessage处理
     }
 
     private boolean handleLaunchActivity(Message msg) {
@@ -173,8 +179,9 @@ public class HCallbackStub implements Handler.Callback, IInjector {
         return envBad;
     }
 
-
-
+    /**
+     * 启动activity的逻辑,这个逻辑在系统中的LaunchActivityItem类 , 在这里, actiivty和intent都是用的占坑的activity ,intent里面保存的都是将要打开的activity信息 , 包含ActivityInfo ... 将会在这里替换成新的activity
+     */
     private boolean handleLaunchActivity2(Message msg) {
         Object clientTransaction = msg.obj;
         List<Object> clientTransactionItemCallBacks = Reflect.on(clientTransaction).call("getCallbacks").get();
@@ -189,14 +196,13 @@ public class HCallbackStub implements Handler.Callback, IInjector {
                         }
 
 
-
                         Intent intent = saveInstance.intent;
                         ComponentName caller = saveInstance.caller;
                         IBinder token = Reflect.on(clientTransaction).call("getActivityToken").get();
                         ActivityInfo info = saveInstance.info;
                         if (VClientImpl.get().getToken() == null) {
                             InstalledAppInfo installedAppInfo = VirtualCore.get().getInstalledAppInfo(info.packageName, 0);
-                            if(installedAppInfo == null){
+                            if (installedAppInfo == null) {
                                 return true;
                             }
                             VActivityManager.get().processRestarted(info.packageName, info.processName, saveInstance.userId);
@@ -212,13 +218,13 @@ public class HCallbackStub implements Handler.Callback, IInjector {
                                 ActivityManagerNative.getDefault.call(),
                                 token,
                                 false
-                        );
+                        );//交给x进程记录activity的创建
                         VActivityManager.get().onActivityCreate(ComponentUtils.toComponentName(info), caller, token, info, intent, ComponentUtils.getTaskAffinity(info), taskId, info.launchMode, info.flags);
                         ClassLoader appClassLoader = VClientImpl.get().getClassLoader(info.applicationInfo);
 
                         stubIntent.setExtrasClassLoader(appClassLoader);
                         ComponentName name = Reflect.on(callBacks).field("mIntent").field("mComponent").get();
-
+                        //替换activity的信息
                         Reflect.on(callBacks).set("mIntent", saveInstance.intent);
                         Reflect.on(callBacks).set("mInfo", saveInstance.info);
 
@@ -235,14 +241,14 @@ public class HCallbackStub implements Handler.Callback, IInjector {
         return true;
     }
 
-    private  boolean handleExecuteTransaction(Message msg) {
+    private boolean handleExecuteTransaction(Message msg) {
         Object clientTransaction = msg.obj;
         List<Object> clientTransactionItemCallBacks = Reflect.on(clientTransaction).call("getCallbacks").get();
         if (clientTransactionItemCallBacks != null && clientTransactionItemCallBacks.size() > 0) {
             for (Object callBacks : clientTransactionItemCallBacks) {
                 try {
-                    if(callBacks.getClass().getName().contains("LaunchActivityItem")){
-                        return  handleLaunchActivity2(msg);
+                    if (callBacks.getClass().getName().contains("LaunchActivityItem")) {
+                        return handleLaunchActivity2(msg);
                     }
                     return true;
                 } catch (Exception e) {

@@ -330,7 +330,7 @@ public class HomeActivity extends VActivity implements HomeContract.HomeView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null) {
+        if (resultCode == RESULT_OK && data != null) {//选择安装的app后回到这里
             List<AppInfoLite> appList = data.getParcelableArrayListExtra(VCommends.EXTRA_APP_INFO_LIST);
             if (appList != null) {
                 for (AppInfoLite info : appList) {

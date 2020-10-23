@@ -195,6 +195,7 @@ public final class VirtualCore {
                     return ServiceManagerNative.getService(serverName);
                 }
             });
+            //检查进程的类型
             detectProcessType();
             //获取InvocationStubManager单例引用，调用到InvocationStubManager.init()
             InvocationStubManager invocationStubManager = InvocationStubManager.getInstance();
@@ -249,6 +250,9 @@ public final class VirtualCore {
         }
     }
 
+    /**
+     * 检查进程的类型
+     */
     private void detectProcessType() {
         // Host package name
         hostPkgName = context.getApplicationInfo().packageName;

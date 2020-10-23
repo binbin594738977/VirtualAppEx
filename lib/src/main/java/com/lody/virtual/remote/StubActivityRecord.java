@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 
 /**
+ * 将真正需要打开activity的信息记录
  * @author Lody
  */
 

@@ -101,6 +101,7 @@ public class ListAppFragment extends VFragment<ListAppContract.ListAppPresenter>
             mInstallButton.setEnabled(count > 0);
             mInstallButton.setText(String.format(Locale.ENGLISH, getResources().getString(R.string.install_d), count));
         });
+        //安装的按钮
         mInstallButton.setOnClickListener(v -> {
             Integer[] selectedIndices = mAdapter.getSelectedIndices();
             ArrayList<AppInfoLite> dataList = new ArrayList<AppInfoLite>(selectedIndices.length);

@@ -22,7 +22,7 @@ public class AppInfoLite implements Parcelable {
     };
     public String packageName;
     public String path;
-    public boolean fastOpen;
+    public boolean fastOpen;//第一次打开,
 
     public AppInfoLite(String packageName, String path, boolean fastOpen) {
         this.packageName = packageName;

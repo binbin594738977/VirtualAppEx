@@ -22,7 +22,7 @@ import io.virtualapp.abs.ui.VActivity;
 import io.virtualapp.home.adapters.AppPagerAdapter;
 
 /**
- * @author Lody
+ * @author Lody 选择安装app的界面
  */
 public class ListAppActivity extends VActivity {
 

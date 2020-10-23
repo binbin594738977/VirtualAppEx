@@ -383,25 +383,25 @@ class MethodProxies {
             int intentIndex = ArrayUtils.indexOfObject(args, Intent.class, 1);
             if (intentIndex < 0) {
                 return ActivityManagerCompat.START_INTENT_NOT_RESOLVED;
-            }
+            }//取数据
             int resultToIndex = ArrayUtils.indexOfObject(args, IBinder.class, 2);
             String resolvedType = (String) args[intentIndex + 1];
             Intent intent = (Intent) args[intentIndex];
             intent.setDataAndType(intent.getData(), resolvedType);
             IBinder resultTo = resultToIndex >= 0 ? (IBinder) args[resultToIndex] : null;
-            int userId = VUserHandle.myUserId();
+            int userId = VUserHandle.myUserId();//得到uid
 
-            if (ComponentUtils.isStubComponent(intent)) {
+            if (ComponentUtils.isStubComponent(intent)) {//一般不进
                 return method.invoke(who, args);
             }
 
-            if (Intent.ACTION_INSTALL_PACKAGE.equals(intent.getAction())
+            if (Intent.ACTION_INSTALL_PACKAGE.equals(intent.getAction())//一般不进
                     || (Intent.ACTION_VIEW.equals(intent.getAction())
                     && "application/vnd.android.package-archive".equals(intent.getType()))) {
                 if (handleInstallRequest(intent)) {
                     return 0;
                 }
-            } else if ((Intent.ACTION_UNINSTALL_PACKAGE.equals(intent.getAction())
+            } else if ((Intent.ACTION_UNINSTALL_PACKAGE.equals(intent.getAction())//一般不进
                     || Intent.ACTION_DELETE.equals(intent.getAction()))
                     && "package".equals(intent.getScheme())) {
 
@@ -457,6 +457,7 @@ class MethodProxies {
 
                 return method.invoke(who, args);
             }
+            //调用x进程V_AMS的startActivity()
             int res = VActivityManager.get().startActivity(intent, activityInfo, resultTo, options, resultWho, requestCode, VUserHandle.myUserId());
             if (res != 0 && resultTo != null && requestCode > 0) {
                 VActivityManager.get().sendActivityResult(resultTo, resultWho, requestCode);
